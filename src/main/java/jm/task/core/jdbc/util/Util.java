@@ -2,13 +2,15 @@ package jm.task.core.jdbc.util;
 import com.mysql.cj.jdbc.NonRegisteringDriver;
 import jm.task.core.jdbc.model.User;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Util {
     private static final String URL = "jdbc:mysql://localhost:3306/users";
     private static final String USERNAME = "root";
     private static final String PASSWORD = "root";
 
-    static void connect (String operation) {
+    public void connect (String operation) {
         try {
             Driver driver = new NonRegisteringDriver();
             DriverManager.registerDriver(driver);
@@ -24,7 +26,9 @@ public class Util {
         }
     }
 
-    static void connectShow (String operation) {
+    public List<User> connectShow () {
+        String sql = "SELECT * FROM pensionniiFond";
+        List <User> users = new ArrayList<>();
         try {
             Driver driver = new NonRegisteringDriver();
             DriverManager.registerDriver(driver);
@@ -34,7 +38,7 @@ public class Util {
         }
 
         try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD); Statement statement = connection.createStatement()) {
-            ResultSet resultSet = statement.executeQuery(operation);
+            ResultSet resultSet = statement.executeQuery(sql);
 
             while (resultSet.next()) {
                 User user = new User();
@@ -42,12 +46,12 @@ public class Util {
                 user.setName(resultSet.getString("name"));
                 user.setLastName(resultSet.getString("lastName"));
                 user.setAge(resultSet.getByte("age"));
-
-                System.out.println(user);
+                users.add(user);
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+        return users;
     }
 
     public void createTable (String nameTable) {
@@ -65,11 +69,6 @@ public class Util {
                 + user.getName() + "', '" + user.getLastName() + "', " + user.getAge() + " );";
         connect(sql);
         System.out.println("User с именем – " + user.getName() + " добавлен в базу данных " + nameTable);
-    }
-
-    public void showTable (String nameTable) {
-        String sql = "SELECT * FROM " + nameTable;
-        connectShow(sql);
     }
 
     public void deleteUser (Long id, String nameTable) {

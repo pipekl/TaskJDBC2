@@ -1,26 +1,28 @@
 package jm.task.core.jdbc;
+import jm.task.core.jdbc.dao.UserDaoJDBCImpl;
 import jm.task.core.jdbc.model.User;
+import jm.task.core.jdbc.service.UserServiceImpl;
 import jm.task.core.jdbc.util.Util;
 import java.util.List;
 
 public class Main {
 
     public static void main(String[] args) {
-        Util util = new Util();
-        String nameTable = "pensionniiFond";
+        UserDaoJDBCImpl userDaoJDBCImpl = new UserDaoJDBCImpl();
         List<User> users = List.of(
                 new User("Vissarion", "Nedopobedimii", (byte) 96),
                 new User("Evlampii", "Shac", (byte) 83),
                 new User("Klavdiya", "Przhevalskaya", (byte) 91),
                 new User("Vladimir", "Tutin", (byte) 101));
 
-        util.createTable(nameTable);
+        userDaoJDBCImpl.createUsersTable();
         for (User user : users) {
-            util.joinUser(user, nameTable);
+            userDaoJDBCImpl.saveUser(user.getName(), user.getLastName(), user.getAge());
         }
-        util.showTable(nameTable);
-        util.deleteUser(2L, nameTable);
-        util.clearTable(nameTable);
-        util.deleteTable(nameTable);
+
+        System.out.println(userDaoJDBCImpl.getAllUsers());
+
+        userDaoJDBCImpl.cleanUsersTable();
+        userDaoJDBCImpl.dropUsersTable();
     }
 }
