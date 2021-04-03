@@ -53,31 +53,4 @@ public class Util {
         }
         return users;
     }
-
-    public void createTable (String nameTable) {
-        String sql = "CREATE TABLE IF NOT EXISTS " + nameTable + " (id bigint primary key auto_increment, name varchar(100), lastName varchar(100), age tinyint);";
-        connect(sql);
-    }
-
-    public void deleteTable (String nameTable) {
-        String sql = "DROP TABLE IF EXISTS " + nameTable;
-        connect(sql);
-    }
-
-    public void joinUser (User user, String nameTable) {
-        String sql = "INSERT " + nameTable + " (name, lastName, age) VALUES ('"
-                + user.getName() + "', '" + user.getLastName() + "', " + user.getAge() + " );";
-        connect(sql);
-        System.out.println("User с именем – " + user.getName() + " добавлен в базу данных " + nameTable);
-    }
-
-    public void deleteUser (Long id, String nameTable) {
-        String sql = "DELETE FROM " + nameTable + " WHERE id = " + id;
-        connect(sql);
-    }
-
-    public void clearTable (String nameTable) {
-        String sql = "TRUNCATE TABLE " + nameTable;
-        connect(sql);
-    }
 }
